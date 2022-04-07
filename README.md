@@ -141,3 +141,62 @@ Data-out
     - `net/http.Response` network response comes back as a concrete type. We can get all the URL information from it, response body, headers, etc.
 - Errors
     - `net/http.Get` Get function returns a response object, but also returns an optional error object. Common for network requests to fail.
+
+### Using other packages
+
+#### Importing a package
+- Typical imports:
+    - Import statement `import "fmt"`
+    - Import block:
+        ```
+        import (
+            "log"
+            "net/http"
+        )
+        ```
+
+- Alternative import methods:
+    - Aliasing:
+        ```
+        import (
+            "encoding/json"
+            lmjson "pluralsight.com/libmanager/json"
+        )
+        ```
+    - Importing for side effect 
+        - `_` write-only variable
+        - this calls the init functions of that package
+        - commonly used in database drivers that have to initialize themselves with the database/sql package
+        ```
+        import (
+            "database/sql"
+            _ "github.com/lib/pq"
+        )
+        ```
+        - causes go runtime to import the pq package, which will import all of the pq library's dependencies, initialize all of the package-level variables in pq, and call those `init` functions
+        ```
+        func init() {
+            sql.Register("postgres", &Driver{})
+        }
+        ```
+        [pq conn.go](https://github.com/lib/pq/blob/v1.10.4/conn.go)
+        - This will register the postgres driver using the string "postgres" with an instance of this driver object.
+
+    - Internal packages
+        - Provides another scoping mechanism
+        - Accessible by parent and its children, but cant be access by the rest of the application
+        - Enables better organization without leaking details
+        - All you need to do is create a package name called 'internal'. In our example, the parent is the 'services' package. So any source file from the services package and below will be able to access this. See `/services/events/serve.go`. It's a sibling of the `/internal` folder but because they're both children of the `services` package, the internal is accessible. 
+
+    - Relative imports
+        - Import package relative to the current one
+        - Not valid in workspaces or modules
+        - A system that allows for rapid prototyping
+        - You will probably never need this because its super easy to spin up a module and get it initialized to start proof of concept
+    
+    - Vendor Directories
+        - When Go was first released there was no mechanism built in to manage multiple version of the same library. To address this, the community created Vendor Directories.
+        - They apply to workspaces only.
+            - Module system does not officially support
+        - First official version management strategy created by Go itself
+        - Hierarchically resolved. Ie: vendor depedency relies on other dependencies. It will follow through the hierarchy to find the first instance of the dependency its looking for and use that.
