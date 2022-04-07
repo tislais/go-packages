@@ -95,5 +95,37 @@ Three types of visibility:
 - Write first sentence as a short description of the element
 
 #### Designing a package
+- Provide a clear solution
+    - Single responsibility
+    - Cohesive API
+- Focus on the consumer
+    - Simple to use
+    - Minimize API
+    - Encapsulate changes
+- Maximize reusability
+    - Reduce dependencies
+    - Minimize scope
 
 #### Interface strategies
+
+![](./interfacestrategies.png)
+
+Receiving data into our package:
+- Concrete types
+    - Configuration
+- Interfaces
+    - Behavior
+        - "Hey I just need to have these behaviors defined, and how you do that is not my problem"
+        - Gives consumer maximum flexibility
+
+Data coming out of our package:
+- Concrete types
+    - Preferable so you can return methods and data so your consumer doesn't have to drill through a bunch of methods to get the data they ask your package to generate for them.
+- Return errors
+    - Avoid panics
+        - Very rarely does a library know that the application can no longer continue to execute. Almost always the responsibility of the consuming application.
+
+This philosophy allows us to...
+- Encapsulate changes
+- Maximize flexibility
+- Avoid abstracting too early
