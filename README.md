@@ -129,3 +129,15 @@ This philosophy allows us to...
 - Encapsulate changes
 - Maximize flexibility
 - Avoid abstracting too early
+
+Data-in 
+- Concrete types
+    - Request object `net/http.Request` defines configuration for an http request.
+- Interfaces
+    - Handler is a way to to interpret an http request coming in on a given path. So by defining that type as an interface, the consumer of the `net/http` package has all of the flexibility to define that handler type in any way that we want.
+
+Data-out 
+- Concrete types
+    - `net/http.Response` network response comes back as a concrete type. We can get all the URL information from it, response body, headers, etc.
+- Errors
+    - `net/http.Get` Get function returns a response object, but also returns an optional error object. Common for network requests to fail.
